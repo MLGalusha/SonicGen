@@ -15,11 +15,6 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 API_KEY = os.getenv("GOOGLE_API_KEY")
 youtube = build("youtube", "v3", developerKey=API_KEY)
 
-
-# ────────────────────────────────────────────────
-# Helper functions
-# ────────────────────────────────────────────────
-
 def get_channel_id_from_query(query):
     print(f"Searching for channel: {query}")
     res = youtube.search().list(
@@ -127,11 +122,6 @@ def filter_videos_by_date(videos, after_date=None, before_date=None):
         filtered.append(v)
     return filtered
 
-
-# ────────────────────────────────────────────────
-# Main workflow function
-# ────────────────────────────────────────────────
-
 def youtube_ingest(channel_handle, after_date=None, before_date=None):
     """Full workflow: fetch all videos from channel and upsert to Supabase"""
     channel_id = get_channel_id_from_handle(channel_handle)
@@ -161,16 +151,3 @@ def youtube_ingest(channel_handle, after_date=None, before_date=None):
             total_inserted += len(filtered)
 
     print(f"Inserted {total_inserted} videos into Supabase")
-
-
-# ────────────────────────────────────────────────
-# Entrypoint
-# ────────────────────────────────────────────────
-
-if __name__ == "__main__":
-    # Only configure handle and date filters here
-    channel_handle = "@RealCharlieKirk"
-    after_date = None
-    before_date = datetime(2025, 9, 11, tzinfo=timezone.utc)
-
-    youtube_ingest(channel_handle, after_date, before_date)

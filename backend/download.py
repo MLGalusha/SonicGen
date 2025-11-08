@@ -20,11 +20,6 @@ def log(message: str) -> None:
 class DownloadError(Exception):
     pass
 
-
-# --------------------------------------------------------------------------
-# Initialization
-# --------------------------------------------------------------------------
-
 def init_bucket() -> storage.bucket.Bucket:
     if not GCS_BUCKET_NAME:
         raise RuntimeError("Missing GCS_AUDIO_BUCKET env var for destination bucket")
@@ -33,14 +28,8 @@ def init_bucket() -> storage.bucket.Bucket:
     log(f"Initialized GCS bucket {GCS_BUCKET_NAME}")
     return bucket
 
-
-# --------------------------------------------------------------------------
-# Downloading + Uploading
-# --------------------------------------------------------------------------
-
 def youtube_url(video_id: str) -> str:
     return f"{YOUTUBE_BASE_URL}{video_id}"
-
 
 def download_audio(url: str, video_id: str, tmp_dir: Path) -> Path:
     tmp_dir.mkdir(parents=True, exist_ok=True)

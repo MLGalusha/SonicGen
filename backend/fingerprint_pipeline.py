@@ -171,29 +171,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-"""
-LAST NIGHT I changed the fingerprinted column to match_status column
-I need to go in and delete the fingerprinted columna and then I need
-to go throughout the code and change anything that used to edit the
-fingerprint column to edit the match_status column.
-
-After that I need to then update the original_video_id upon matching.
-After that I just prepare the pipeline and start running.
-Also I do want to be able to check and switch out videos that are the
-real originals so I want to build logic for that like checking the
-length and if it is longer I might simply just flag it using the
-match_status. A flag means I need to check it out and figure out what
-do. Where it could be fingerprinted but we are not for caution.
-
-After running successfully I'm going to clean up the pipeline to only
-what is useful and delete the surrounding junk like things used for
-testing.
-
-After this its time to commit these changes to github SonicGen.
-
-After that we are going to start working on our system be able to
-basically upload a clip and jump immediatly to the original video
-via the youtube api embedding thats a frontend job.
-"""
