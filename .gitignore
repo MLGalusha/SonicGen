@@ -1,0 +1,23 @@
+# Ignore all data folders
+**/data/
+
+# Ignore Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+env*/
+**/env/
+**/truthengine-env/
+**/truthengine310/
+
+# Ignore environment files
+*.env
+.env.*
+
+# Ignore All Pycache
+__pycache__/
+
+**/keys/
+
+**/testing/
