@@ -4,6 +4,8 @@ from pathlib import Path
 import yt_dlp
 from dotenv import load_dotenv
 from google.cloud import storage
+from google.api_core.exceptions import NotFound
+
 
 load_dotenv()
 
@@ -76,5 +78,23 @@ def upload_to_gcs(bucket: storage.bucket.Bucket, local_file: Path, destination_n
     blob = bucket.blob(destination_name)
     blob.upload_from_filename(str(local_file), content_type="audio/mpeg")
     log(f"Upload complete for {destination_name}")
+
+
+def download_from_gcs(bucket: storage.bucket.Bucket, local_file: Path, destination_name: str) -> Path | None:
+    """
+    Downloads a file from Google Cloud Storage to a local path.
+    Returns the local file path if successful, or None if the blob doesn't exist.
+    """
+    blob = bucket.blob(destination_name)
+    try:
+        if not blob.exists():
+            return None
+        file_path = f"{local_file}/{destination_name}"
+        print(f"Downloading gs://{bucket.name}/{destination_name} to {local_file}")
+        blob.download_to_filename(file_path)
+        print(f"Download complete for {destination_name}")
+        return file_path
+    except NotFound:
+        return None
 
 

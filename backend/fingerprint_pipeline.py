@@ -16,6 +16,7 @@ from download import (
     download_audio,
     init_bucket,
     upload_to_gcs,
+    download_from_gcs
 )
 
 # --- Config ---
@@ -45,18 +46,20 @@ def process_videos(limit: int = 1):
 
         for row in rows:
             video_uuid = row["id"]
-            youtube_video_id = row["youtube_id"]
+            youtube_video_id = row["video_id"]
             object_name = f"{youtube_video_id}.mp3"
             print(f"\n[Pipeline] Starting video {youtube_video_id} ({video_uuid})")
             mark_video_status(video_uuid, "pending")
 
             try:
                 # --- Download & Upload ---
-                url = youtube_url(youtube_video_id)
-                audio_path = download_audio(url, youtube_video_id, DOWNLOAD_TMP_DIR)
-                print("\nUploading to Cloud Bucket!")
                 try:
-                    upload_to_gcs(bucket, audio_path, object_name)
+                    audio_path = download_from_gcs(bucket, DOWNLOAD_TMP_DIR, object_name)
+                    if not audio_path:
+                        url = youtube_url(youtube_video_id)
+                        audio_path = download_audio(url, youtube_video_id, DOWNLOAD_TMP_DIR)
+                        print("\nUploading to Cloud Bucket!")
+                        upload_to_gcs(bucket, audio_path, object_name)
 
                     # --- Fingerprint Generation ---
                     fingerprint = fingerprint_audio(audio_path)
